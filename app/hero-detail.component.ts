@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Params } from '@angular/router';
 
 import { HeroService } from './hero.service';
 import { Hero } from './hero';
@@ -9,9 +9,8 @@ import { Hero } from './hero';
   templateUrl: 'app/hero-detail.component.html',
   styleUrls: ['app/hero-detail.component.css']
 })
-export class HeroDetailComponent implements OnInit, OnDestroy {
+export class HeroDetailComponent implements OnInit {
   hero: Hero;
-  sub: any;
 
   constructor(
     private heroService: HeroService,
@@ -19,15 +18,11 @@ export class HeroDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sub = this.route.params.subscribe(params => {
+    this.route.params.forEach((params: Params) => {
       let id = +params['id'];
       this.heroService.getHero(id)
         .then(hero => this.hero = hero);
     });
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
   }
 
   goBack() {
